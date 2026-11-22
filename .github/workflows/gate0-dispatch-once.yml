@@ -17,3 +17,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh api -X POST repos/WOLFENHO/adp-gold-gate0-ops/actions/workflows/rehearsal-gate0.yml/dispatches -f ref=main
+# One bounded classification retry.
