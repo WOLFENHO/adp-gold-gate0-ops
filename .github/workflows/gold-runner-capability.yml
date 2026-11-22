@@ -1,0 +1,18 @@
+name: Gold runner capability check
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/gold-runner-capability.yml
+permissions:
+  contents: read
+concurrency:
+  group: gold-runner-capability
+  cancel-in-progress: false
+jobs:
+  capability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Confirm private runner execution
+        run: printf '%s\n' 'GOLD_RUNNER_CAPABILITY_OK'
