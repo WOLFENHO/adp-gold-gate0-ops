@@ -28,9 +28,25 @@ class GateError(Exception):
 
 
 def run(stage, *args, cwd=None, env=None):
-    result = subprocess.run(args, cwd=cwd, env=env, stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE, check=False)
+    try:
+        result = subprocess.run(args, cwd=cwd, env=env, stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE, check=False, timeout=300)
+    except FileNotFoundError:
+        raise GateError("CLIENT_UNAVAILABLE") from None
+    except subprocess.TimeoutExpired:
+        raise GateError("CONNECTION_TIMEOUT" if stage == "SOURCE_IDENTITY_FAILED" else stage) from None
     if result.returncode:
+        if stage == "SOURCE_IDENTITY_FAILED":
+            detail = result.stderr.decode("utf-8", errors="replace").lower()
+            for phrase, fixed in (("password authentication failed", "DATABASE_PASSWORD_REJECTED"),
+                                  ("tenant or user not found", "POOLER_USER_REJECTED"),
+                                  ("could not translate host name", "POOLER_DNS_FAILED"),
+                                  ("connection timed out", "CONNECTION_TIMEOUT"),
+                                  ("network is unreachable", "POOLER_NETWORK_FAILED"),
+                                  ("no route to host", "POOLER_NETWORK_FAILED"),
+                                  ("ssl", "POOLER_TLS_FAILED")):
+                if phrase in detail:
+                    raise GateError(fixed)
         raise GateError(stage)
     return result.stdout.decode("utf-8", errors="replace")
 
