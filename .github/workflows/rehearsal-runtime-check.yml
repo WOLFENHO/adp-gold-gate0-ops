@@ -1,0 +1,33 @@
+name: ADP Rehearsal protected runtime check
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_url:
+        description: Exact immutable protected Gold Preview URL
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: adp-rehearsal-runtime-check
+  cancel-in-progress: false
+
+jobs:
+  runtime-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      ADP_GOLD_RUNTIME_TOKEN: ${{ secrets.ADP_GOLD_RUNTIME_TOKEN }}
+      ADP_GOLD_DEPLOYMENT_URL: ${{ inputs.deployment_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --global vercel@66.5.0
+      - name: Invoke one protected read-only credential check
+        run: python3 scripts/gate0_runtime_check.py
