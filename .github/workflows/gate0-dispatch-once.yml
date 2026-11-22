@@ -1,0 +1,19 @@
+name: One-time Gate 0 dispatcher
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/gate0-dispatch-once.yml
+permissions:
+  actions: write
+  contents: read
+jobs:
+  dispatch:
+    if: github.repository == 'WOLFENHO/adp-gold-gate0-ops'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger manual Gate 0 workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST repos/WOLFENHO/adp-gold-gate0-ops/actions/workflows/rehearsal-gate0.yml/dispatches -f ref=main
