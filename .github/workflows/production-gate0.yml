@@ -1,0 +1,32 @@
+name: ADP Production Gate 0 backup and isolated restore
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: adp-production-gate0
+  cancel-in-progress: false
+
+jobs:
+  backup-and-restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      PROD_TEMP_TOKEN: ${{ secrets.PROD_TEMP_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Export Production and verify isolated restore
+        run: python3 scripts/prod_gate0_backup_restore.py
+      - name: Retain verified private recovery archive for seven days
+        uses: actions/upload-artifact@v4
+        with:
+          name: adp-production-gate0-verified
+          path: ${{ runner.temp }}/adp-production-gate0/verified-backup.tar.gz
+          retention-days: 7
+          if-no-files-found: error
