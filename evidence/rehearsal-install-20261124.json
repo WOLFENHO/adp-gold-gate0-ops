@@ -1,0 +1,41 @@
+{
+  "target": "nqqarmkgnuvvqnvnodyc",
+  "runtime": "ADP-GOLD-RUNTIME-READY",
+  "migrations": [
+    "gold_qc002_authorized_admin",
+    "gold_qc026_upload_intents",
+    "gold_qc026_bounded_recovery",
+    "gold_sequential_training"
+  ],
+  "live_checks": {
+    "upload_rpc_acl": "PASS",
+    "internal_helpers_private": "PASS",
+    "progression_acl": "PASS",
+    "anon_member_denial": "PASS",
+    "missing_identity_progression_closed": "PASS"
+  },
+  "counts": {
+    "auth_users": 1,
+    "profiles": 1,
+    "whitelist": 1,
+    "admins": 1,
+    "videos": 0,
+    "intents": 0,
+    "proofs": 0
+  },
+  "playback_enabled": false,
+  "edge_acceptance": {
+    "result": "DISABLED",
+    "status": 403,
+    "version": 2,
+    "verify_jwt": true,
+    "fixtures_created": 0
+  },
+  "remaining": [
+    "Authenticated Data API matrix",
+    "Overlapping reserve and claim races",
+    "Mux recovery",
+    "Discord browser media acceptance"
+  ],
+  "production_changes": false
+}
