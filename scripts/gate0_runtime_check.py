@@ -26,8 +26,11 @@ def main():
     if not URL_PATTERN.fullmatch(url) or not vercel_token or len(probe_token) < 32:
         raise RuntimeError("CONFIG")
     with tempfile.TemporaryDirectory() as work:
-        run(["vercel", "link", "--yes", "--project", "adp-training-portal",
-             "--scope", "uther", "--token", vercel_token], work)
+        project_dir = os.path.join(work, ".vercel")
+        os.mkdir(project_dir)
+        with open(os.path.join(project_dir, "project.json"), "w", encoding="utf-8") as link:
+            json.dump({"projectId": "prj_yD3acO9J3cTRlotZzXO2rGVyHSwK",
+                       "orgId": "team_un7n1bjH0VfPwMwaSJAZsbqX"}, link)
         response = run(["vercel", "curl", "/api/diagnostics/gold-runtime",
                         "--deployment", url, "--scope", "uther", "--token", vercel_token,
                         "-sS", "-H", "x-adp-gold-runtime: " + probe_token], work)
