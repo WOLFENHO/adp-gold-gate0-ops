@@ -1,0 +1,29 @@
+{
+  "target": "nqqarmkgnuvvqnvnodyc",
+  "auth_data_api": "PASS",
+  "reserve": {
+    "distinctPostgresPids": true,
+    "overlap": true,
+    "intents": 1,
+    "videos": 1,
+    "audits": 1
+  },
+  "claim": {
+    "distinctPostgresPids": true,
+    "overlap": true,
+    "winners": 1
+  },
+  "payloadConflict": "PASS",
+  "recovery": [
+    "review",
+    "reconcile",
+    "duplicate-denial",
+    "metadata-mismatch-denial",
+    "terminal-binding",
+    "rollback"
+  ],
+  "fixtureCleanup": true,
+  "providerCalls": 0,
+  "runnerDisabled": true,
+  "productionChanges": false
+}
