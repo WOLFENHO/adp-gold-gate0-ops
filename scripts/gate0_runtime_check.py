@@ -15,6 +15,17 @@ def run(args, cwd):
     result = subprocess.run(args, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                             check=False, timeout=90)
     if result.returncode:
+        diagnostic = (result.stderr + result.stdout).decode("utf-8", errors="replace").lower()
+        if "not authorized" in diagnostic or "unauthorized" in diagnostic or "invalid token" in diagnostic:
+            raise RuntimeError("CLI_AUTH")
+        if "forbidden" in diagnostic or "insufficient" in diagnostic:
+            raise RuntimeError("CLI_PERMISSION")
+        if "unknown option" in diagnostic or "unknown argument" in diagnostic:
+            raise RuntimeError("CLI_ARGUMENT")
+        if "project" in diagnostic and ("not found" in diagnostic or "not linked" in diagnostic):
+            raise RuntimeError("CLI_PROJECT")
+        if "deployment" in diagnostic and "not found" in diagnostic:
+            raise RuntimeError("CLI_DEPLOYMENT")
         raise RuntimeError("CLI_FAILURE")
     return result.stdout.decode("utf-8", errors="replace")
 
@@ -49,7 +60,7 @@ if __name__ == "__main__":
     except Exception as error:
         # Never print CLI stderr/stdout, URLs, tokens, response bodies or tracebacks.
         reason = str(error) if isinstance(error, RuntimeError) else "UNEXPECTED_FAILURE"
-        if reason not in ("CONFIG", "CLI_FAILURE", "UNEXPECTED_RESPONSE", "NOT_READY"):
+        if reason not in ("CONFIG", "CLI_FAILURE", "CLI_AUTH", "CLI_PERMISSION", "CLI_ARGUMENT", "CLI_PROJECT", "CLI_DEPLOYMENT", "UNEXPECTED_RESPONSE", "NOT_READY"):
             reason = "UNEXPECTED_FAILURE"
         print("::error::GATE0_RUNTIME_" + reason, file=sys.stderr)
         sys.exit(1)
