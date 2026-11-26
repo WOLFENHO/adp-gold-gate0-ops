@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-26",
+  "project": "ADP-Rehearsal",
+  "sourceCommit": "8242dcd04e88f9abed99b3b8c454cbe1f46a86eb",
+  "completionFixCommit": "a184e64f2b136a894721f13cd66beade25fc750a",
+  "previewDeployment": "dpl_86LoCNQ6C7etyQ7G24F3kqWy3FgJ",
+  "checks": {
+    "oauthCallback": "exact stable alias added, existing callbacks retained",
+    "discordAdminLogin": "pass",
+    "upload": "one short disposable clip, Mux asset ready, metadata verified",
+    "idempotencyRecovery": "previous live concurrency and rollback-only recovery pass; current failed pre-provider operation returned not_found and clean new operation succeeded",
+    "signedPlayback": "pass",
+    "antiSkip": "seek to unwatched end rejected",
+    "heartbeat": "accepted periodic, pause, seek, play, complete",
+    "resume": "58.9% persisted after reload, resumed at 9.9 seconds",
+    "durationMismatch": "Mux 16.721s, browser endpoint 16.704s; bounded 100ms correction with accepted complete heartbeat and asset identity",
+    "verifiedCompletion": "proof current, 100% member and admin",
+    "progression": "transactional unlock pass, reset proof locks, direct session start bypass denied",
+    "fullscreen": "button present; browser fullscreen state not observed",
+    "cleanup": "Mux asset deleted; exact-ID video, intent, progress, proof, session cascades removed; four audit rows retained; playback disabled; temporary Mux token revoked and signing key deleted; branch env switches and credentials disabled",
+    "protectedCounts": {
+      "authUsers": 1,
+      "profiles": 1,
+      "whitelist": 1,
+      "administrators": 1,
+      "videos": 0,
+      "intents": 0,
+      "progress": 0,
+      "proofs": 0,
+      "sessions": 0
+    }
+  },
+  "production": "untouched",
+  "cost": "Mux Free, no paid resource created"
+}
